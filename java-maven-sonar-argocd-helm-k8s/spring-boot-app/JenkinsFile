@@ -26,8 +26,12 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
           sh '''
-             cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
-             mvn org.sonarsource.scanner.maven:sonar-maven-plugin:4.0.0.4121:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=$SONAR_URL
+              apt-get update
+              apt-get install -y openjdk-17-jdk
+              export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+              export PATH=$JAVA_HOME/bin:$PATH
+              cd java-maven-sonar-argocd-helm-k8s/spring-boot-app
+              mvn org.sonarsource.scanner.maven:sonar-maven-plugin:4.0.0.4121:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=$SONAR_URL
           '''
         }
       }
